@@ -15,7 +15,15 @@ class CreateRafflePrizesTable extends Migration
     {
         Schema::create('raffle_prizes', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('raffle');
+            $table->string('name',100);
+            $table->unsignedInteger('winner')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('raffle_prizes', function (Blueprint $table) {
+            $table->foreign('raffle')->references('id')->on('raffles');
+            $table->foreign('winner')->references('id')->on('users');
         });
     }
 

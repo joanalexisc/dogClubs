@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNotificationCategoriesTable extends Migration
+class CreateEventParticipationStatusesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateNotificationCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('notification_categories', function (Blueprint $table) {
+        Schema::create('event_participation_statuses', function (Blueprint $table) {
             $table->increments('id');
             $table->string('code', 10)->unique();
             $table->string('description', 50);
@@ -28,6 +28,6 @@ class CreateNotificationCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('notification_categories');
+        Schema::dropIfExists('event_participation_statuses');
     }
 }

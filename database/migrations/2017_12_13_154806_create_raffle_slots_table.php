@@ -15,7 +15,17 @@ class CreateRaffleSlotsTable extends Migration
     {
         Schema::create('raffle_slots', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('raffle');
+            $table->unsignedInteger('number');
+            $table->unsignedInteger('user')->nullablle();
+            $table->unsignedInteger('payment_status')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('raffle_slots', function (Blueprint $table) {
+            $table->foreign('raffle')->references('id')->on('raffles');
+            $table->foreign('user')->references('id')->on('users');
+            $table->foreign('payment_status')->references('id')->on('payment_statuses');
         });
     }
 
