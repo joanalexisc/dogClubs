@@ -16,7 +16,7 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('concept');
-            $table->unsignedInteger('voucher_picture');
+            // $table->unsignedInteger('voucher_picture');
             $table->double('amount', 8, 2);
             $table->unsignedInteger('status');
             $table->text('comments', 300)->nullable();
@@ -25,7 +25,7 @@ class CreatePaymentsTable extends Migration
         });
 
         Schema::table('payments', function (Blueprint $table) {
-            $table->foreign('voucher_picture')->references('id')->on('pictures');
+            // $table->foreign('voucher_picture')->references('id')->on('pictures');
             $table->foreign('concept')->references('id')->on('payment_concepts');
             $table->foreign('status')->references('id')->on('payment_statuses');
         });

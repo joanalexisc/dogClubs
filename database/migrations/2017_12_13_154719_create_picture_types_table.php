@@ -15,8 +15,8 @@ class CreatePictureTypesTable extends Migration
     {
         Schema::create('picture_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('code', 15)->unique();
-            $table->string('description', 50);
+            $table->string('code', 30)->unique();
+            $table->string('description', 100);
             $table->string('folder', 400);
             $table->timestamps();
         });

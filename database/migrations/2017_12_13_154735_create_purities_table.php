@@ -15,7 +15,7 @@ class CreatePuritiesTable extends Migration
     {
         Schema::create('purities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 50)->unique();
+            $table->string('description', 100)->unique();
             $table->timestamps();
         });
     }

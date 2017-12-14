@@ -19,7 +19,7 @@ class CreateRafflesTable extends Migration
             $table->string('description',500);
             $table->double('amount', 8, 2);
             $table->unsignedInteger('max_slots_user');
-            $table->dateTime('clean_date');
+            $table->dateTime('clean_date')->nullable();
             $table->dateTime('end_date');
             $table->timestamps();
         });
