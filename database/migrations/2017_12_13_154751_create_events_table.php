@@ -23,7 +23,7 @@ class CreateEventsTable extends Migration
             $table->timestamps();
         });
 
-        Schema::table('payments', function (Blueprint $table) {
+        Schema::table('events', function (Blueprint $table) {
             $table->foreign('payment_type')->references('id')->on('payment_types');
             // $table->foreign('concept')->references('id')->on('payment_concepts');
             // $table->foreign('status')->references('id')->on('payment_statuses');
