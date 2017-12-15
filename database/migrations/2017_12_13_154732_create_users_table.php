@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->date('birthday');
-            $table->unsignedInteger('profile_pic');
+            // $table->unsignedInteger('profile_pic');
             $table->string('names',100);
             $table->string('last_names',100);
             $table->char('sex',1);

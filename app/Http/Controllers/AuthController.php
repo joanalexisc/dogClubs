@@ -19,9 +19,16 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name' => 'required|max:255',
+            'name' => 'required|max:100',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|min:6|max:30',
+            'personal_id' => 'required|max:11',
+            'mobile' => 'required|max:10',
+            'home' => 'required|max:10',
+            'birthday' => 'required|date',
+            'last_names' => 'required|max:100',
+            'sex' => 'required|max:1',
+            'address' => 'required|max:500'
         ];
         $input = $request->only(
             'name',
