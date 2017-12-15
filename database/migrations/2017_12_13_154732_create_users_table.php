@@ -26,6 +26,7 @@ class CreateUsersTable extends Migration
             $table->string('names',100);
             $table->string('last_names',100);
             $table->char('sex',1);
+            $table->string('address',500);
             $table->unsignedInteger('role');
             $table->unsignedInteger('status');
             $table->rememberToken();
