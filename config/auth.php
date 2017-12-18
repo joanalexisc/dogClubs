@@ -99,4 +99,7 @@ return [
         ],
     ],
 
+    'model' => 'App\User', 'table' => 'users',
+    
+    
 ];

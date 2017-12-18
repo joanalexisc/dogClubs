@@ -10,51 +10,11 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 
 use App\Http\Requests\UserRequest;
-
+use App\util\EntityUtil;
 
 
 class AuthController extends Controller
 {
-
-    function getUserModel(UserRequest $request){
-        $user = new User;
-        //'names', 'email', 'password','is_verified','personal_id','mobile','home','birthday','last_names','sex','address','club'
-        $user->names = $request->names;
-        $user->last_names = $request->last_names;
-        $user->email = $request->email;
-        $user->password = $request->password;
-        $user->personal_id = $request->personal_id;
-        $user->mobile = $request->mobile;
-        $user->home = $request->home;
-        $user->birthday = $request->birthday;
-        $user->sex = $request->sex;
-        $user->address = $request->address;
-        $user->role = 2;//user by default
-        $user->status = 1;//register pending for aprovation
-        
-        return $user;
-    }
-
-    function getDogModels(UserRequest $request){
-        $dogs = array();
-        foreach($request->dogs as $rd){
-            $dog = new \App\Dog;
-            $dog->name = $rd["name"];
-            $dog->sex  = $rd["sex"];
-            $dog->birthday  = $rd["birthday"];
-            $dog->purity  = $rd["purity"];
-            $dog->breeder  = $rd["breeder"];
-            $dog->mother  = $rd["mother"];
-            $dog->father  = $rd["father"];
-            $dog->isAlive  = $rd["isAlive"];
-            $dogs[] = $dog;
-        }
-        return $dogs;
-    }
-
-
-
-
 
     /**
      * API Register
@@ -64,11 +24,11 @@ class AuthController extends Controller
      */
     public function register(UserRequest $request)
     {
-        $configuration = \App\Configuration::where('code','CLUB_ID')->first();
-        $club = \App\Club::findOrFail($configuration->value);
-        $user = $this->getUserModel($request);
-        $club->users()->save($user);
-        $dogs = $this->getDogModels($request);
+        // $configuration = \App\Configuration::where('code','CLUB_ID')->first();
+        // $club = \App\Club::findOrFail($configuration->value);
+        $user = EntityUtil::getUserModel($request);
+        $user->save();
+        $dogs = EntityUtil::getDogModels($request);
         foreach($dogs as &$dog){
             $user->dogs()->save($dog);
         }
@@ -204,4 +164,43 @@ class AuthController extends Controller
             'success' => true, 'data'=> ['msg'=> 'A reset email has been sent! Please check your email.']
         ]);
     }
+
+    public function dummy(){
+        return response()->json(['nombre'=>'Prueba']);
+    }
+
+    public function createRole(Request $request){
+        $role = new Role();
+        $role->name = $request->input('name');
+        $role->save();
+
+        return response()->json("created");       
+    }
+
+    public function createPermission(Request $request){
+        $viewUsers = new Permission();
+        $viewUsers->name = $request->input('name');
+        $viewUsers->save();
+
+        return response()->json("created");       
+    }
+
+    public function assignRole(Request $request){
+        $user = User::where('email', '=', $request->input('email'))->first();
+
+        $role = Role::where('name', '=', $request->input('role'))->first();
+        //$user->attachRole($request->input('role'));
+        $user->roles()->attach($role->id);
+
+        return response()->json("created");
+    }
+
+    public function attachPermission(Request $request){
+        $role = Role::where('name', '=', $request->input('role'))->first();
+        $permission = Permission::where('name', '=', $request->input('name'))->first();
+        $role->attachPermission($permission);
+
+        return response()->json("created");       
+    }
+
 }

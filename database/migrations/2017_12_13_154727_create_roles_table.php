@@ -13,12 +13,17 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('code', 30)->unique();
-            $table->string('description', 100);
-            $table->timestamps();
-        });
+        // Schema::create('roles', function (Blueprint $table) {
+        //     $table->increments('id');
+        //     $table->string('code', 30)->unique();
+        //     $table->string('description', 100);
+        //     $table->timestamps();
+        // });
+
+        // DB::table('roles')->insert([
+        //     ['code' => 'ADM', 'description' => 'Administrador'],
+        //     ['code' => 'USR', 'description' => 'Usuario']  
+        // ]);
     }
 
     /**
@@ -28,6 +33,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        // Schema::dropIfExists('roles');
     }
 }

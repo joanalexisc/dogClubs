@@ -20,6 +20,21 @@ Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
 Route::post('recover', 'AuthController@recover');
 
+Route::post('role', 'AuthController@createRole');
+Route::post('permission', 'AuthController@createPermission');
+Route::post('assign-role', 'AuthController@assignRole');
+Route::post('attach-permission', 'AuthController@attachPermission');
+
+
+Route::group(['prefix' => 'api', 'middleware' => ['ability:admin,create-users']], function()
+{
+    Route::get('users', 'AuthController@dummy');
+});
+
+// Authentication route
+Route::post('authenticate', 'AuthController@authenticate');
+
+
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
 Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
 Route::post('password/reset', 'Auth\PasswordController@reset');
