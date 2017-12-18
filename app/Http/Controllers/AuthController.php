@@ -8,54 +8,95 @@ use Validator;
 use DB, Hash, Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
+
+use App\Http\Requests\UserRequest;
+
+
+
 class AuthController extends Controller
 {
+
+    function getUserModel(UserRequest $request){
+        $user = new User;
+        //'names', 'email', 'password','is_verified','personal_id','mobile','home','birthday','last_names','sex','address','club'
+        $user->names = $request->names;
+        $user->last_names = $request->last_names;
+        $user->email = $request->email;
+        $user->password = $request->password;
+        $user->personal_id = $request->personal_id;
+        $user->mobile = $request->mobile;
+        $user->home = $request->home;
+        $user->birthday = $request->birthday;
+        $user->sex = $request->sex;
+        $user->address = $request->address;
+        $user->role = 2;//user by default
+        $user->status = 1;//register pending for aprovation
+        
+        return $user;
+    }
+
+    function getDogModels(UserRequest $request){
+        $dogs = array();
+        foreach($request->dogs as $rd){
+            $dog = new \App\Dog;
+            $dog->name = $rd["name"];
+            $dog->sex  = $rd["sex"];
+            $dog->birthday  = $rd["birthday"];
+            $dog->purity  = $rd["purity"];
+            $dog->breeder  = $rd["breeder"];
+            $dog->mother  = $rd["mother"];
+            $dog->father  = $rd["father"];
+            $dog->isAlive  = $rd["isAlive"];
+            $dogs[] = $dog;
+        }
+        return $dogs;
+    }
+
+
+
+
+
     /**
      * API Register
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(Request $request)
+    public function register(UserRequest $request)
     {
-        $rules = [
-            'name' => 'required|max:100',
-            'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|min:6|max:30',
-            'personal_id' => 'required|max:11',
-            'mobile' => 'required|max:10',
-            'home' => 'required|max:10',
-            'birthday' => 'required|date',
-            'last_names' => 'required|max:100',
-            'sex' => 'required|max:1',
-            'address' => 'required|max:500'
-        ];
-        $input = $request->only(
-            'name',
-            'email',
-            'password',
-            'password_confirmation'
-        );
-        $validator = Validator::make($input, $rules);
-        if($validator->fails()) {
-            $error = $validator->messages()->toJson();
-            return response()->json(['success'=> false, 'error'=> $error]);
+        $configuration = \App\Configuration::where('code','CLUB_ID')->first();
+        $club = \App\Club::findOrFail($configuration->value);
+        $user = $this->getUserModel($request);
+        $club->users()->save($user);
+        $dogs = $this->getDogModels($request);
+        foreach($dogs as &$dog){
+            $user->dogs()->save($dog);
         }
-        $name = $request->name;
-        $email = $request->email;
-        $password = $request->password;
-        $user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
-        $verification_code = str_random(30); //Generate verification code
-        DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
-        $subject = "Please verify your email address.";
-        Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('FROM_EMAIL_ADDRESS'), "From User/Company Name Goes Here");
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });
+
+
+        //$user->club()->associate($club);
+        // $user->save();
+        // $user = User::create([
+        //     'club' => $configuration->value, 
+        //     'name' => $name, 
+        //     'email' => $email, 
+        //     'password' => Hash::make($password)
+            
+            
+        //     ]);
+        // $verification_code = str_random(30); //Generate verification code
+        // DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
+        // $subject = "Please verify your email address.";
+        // Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
+        //     function($mail) use ($email, $name, $subject){
+        //         $mail->from(getenv('FROM_EMAIL_ADDRESS'), "From User/Company Name Goes Here");
+        //         $mail->to($email, $name);
+        //         $mail->subject($subject);
+        //     });
         return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email to complete your registration.']);
     }
+
+   
 
     /**
      * API Verify User

@@ -43,7 +43,7 @@ class CreateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             // $table->foreign('user')->references('id')->on('users');
             $table->foreign('club')->references('id')->on('clubs');
-            $table->foreign('profile_pic')->references('id')->on('pictures');
+            // $table->foreign('profile_pic')->references('id')->on('pictures');
             $table->foreign('role')->references('id')->on('roles');
             $table->foreign('status')->references('id')->on('user_statuses');
         });

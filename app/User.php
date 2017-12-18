@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'names', 'email', 'password','is_verified','personal_id','mobile','home','birthday','profile_pic','last_names','sex','address'
+        'names', 'email', 'password','is_verified','personal_id','mobile','home','birthday','last_names','sex','address','club'
     ];
 
     /**
@@ -26,4 +26,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function club(){
+       return $this->belongsTo('App\Club','club');
+    }
+
+    public function dogs(){
+        return $this->belongsToMany('App\Dog');
+    }
 }
