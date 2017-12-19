@@ -21,6 +21,7 @@ Route::post('register', 'AuthController@register');
 Route::post('login', 'AuthController@login');
 //validate mail
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
+Route::get('token', 'AuthController@token');
 
 
 Route::post('recover', 'AuthController@recover');
@@ -47,6 +48,7 @@ Route::post('password/reset', 'Auth\PasswordController@reset');
 
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::get('logout', 'AuthController@logout');
+    
     Route::get('test', function(){
         return response()->json(['foo'=>'bar']);
     });

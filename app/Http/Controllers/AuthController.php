@@ -120,6 +120,22 @@ class AuthController extends Controller
         // all good so return the token
         return response()->json(['success' => true, 'data'=> [ 'token' => "Bearer " . $token ]]);
     }
+
+
+    public function token(){
+        $token = JWTAuth::getToken();
+        if(!$token){
+            throw new BadRequestHtttpException('Token not provided');
+        }
+        try{
+            $token = JWTAuth::refresh($token);
+        }catch(TokenInvalidException $e){
+            throw new AccessDeniedHttpException('The token is invalid');
+        }
+        return response()->json(['token'=>$token]);
+    }
+
+
     /**
      * Log out
      * Invalidate the token, so user cannot use it anymore
