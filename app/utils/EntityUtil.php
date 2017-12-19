@@ -1,8 +1,9 @@
 <?php
 
-namespace App\util;
+namespace App\utils;
 
 use App\Http\Requests\UserRequest;
+use Hash;
 
 class EntityUtil
 {
@@ -12,7 +13,7 @@ class EntityUtil
         $user->names = $request->names;
         $user->last_names = $request->last_names;
         $user->email = $request->email;
-        $user->password = $request->password;
+        $user->password = Hash::make($request->password);
         $user->personal_id = $request->personal_id;
         $user->mobile = $request->mobile;
         $user->home = $request->home;

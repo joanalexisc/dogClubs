@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 
 use App\Http\Requests\UserRequest;
-use App\util\EntityUtil;
+use App\utils\EntityUtil;
 
 
 class AuthController extends Controller
@@ -44,8 +44,8 @@ class AuthController extends Controller
             
             
         //     ]);
-        // $verification_code = str_random(30); //Generate verification code
-        // DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
+        $verification_code = str_random(30); //Generate verification code
+        DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
         // $subject = "Please verify your email address.";
         // Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
         //     function($mail) use ($email, $name, $subject){
@@ -118,7 +118,7 @@ class AuthController extends Controller
             return response()->json(['success' => false, 'error' => 'could_not_create_token'], 500);
         }
         // all good so return the token
-        return response()->json(['success' => true, 'data'=> [ 'token' => $token ]]);
+        return response()->json(['success' => true, 'data'=> [ 'token' => "Bearer " . $token ]]);
     }
     /**
      * Log out
