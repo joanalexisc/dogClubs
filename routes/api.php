@@ -32,8 +32,8 @@ Route::post('permission', 'AuthController@createPermission');
 Route::post('assign-role', 'AuthController@assignRole');
 Route::post('attach-permission', 'AuthController@attachPermission');
 
-
-Route::group(['prefix' => 'api', 'middleware' => ['ability:admin,create-users']], function()
+//'prefix' => 'api',
+Route::group(['middleware' => ['ability:admin,create-users']], function()
 {
     Route::get('users', 'AuthController@dummy');
 });
@@ -47,9 +47,7 @@ Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
 Route::post('password/reset', 'Auth\PasswordController@reset');
 
 Route::group(['middleware' => ['jwt.auth']], function() {
-    Route::get('logout', 'AuthController@logout');
-    
-    Route::get('test', function(){
-        return response()->json(['foo'=>'bar']);
-    });
+    Route::post('logout', 'AuthController@logout');
+   
+   
 });

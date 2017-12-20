@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
+use App\Role;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Validator;
@@ -99,6 +100,9 @@ class AuthController extends Controller
         ];
         $input = $request->only('email', 'password');
         $validator = Validator::make($input, $rules);
+
+        $user_status = \App\UserStatus::where('CODE','APR')->first()->id; 
+
         if($validator->fails()) {
             $error = $validator->messages()->toJson();
             return response()->json(['success'=> false, 'error'=> $error]);
@@ -106,7 +110,8 @@ class AuthController extends Controller
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
-            'is_verified' => 1
+            'is_verified' => 1,
+            'status' => $user_status
         ];
         try {
             // attempt to verify the credentials and create a token for the user
@@ -144,9 +149,9 @@ class AuthController extends Controller
      * @param Request $request
      */
     public function logout(Request $request) {
-        $this->validate($request, ['token' => 'required']);
+        $token = $token = JWTAuth::getToken();
         try {
-            JWTAuth::invalidate($request->input('token'));
+            JWTAuth::invalidate($token);
             return response()->json(['success' => true]);
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
@@ -217,6 +222,12 @@ class AuthController extends Controller
         $role->attachPermission($permission);
 
         return response()->json("created");       
+    }
+
+    public function me(){
+        
+        $user = JWTAuth::parseToken()->authenticate();
+        return response()->json($user);
     }
 
 }
