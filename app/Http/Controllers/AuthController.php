@@ -12,10 +12,16 @@ use Illuminate\Mail\Message;
 
 use App\Http\Requests\UserRequest;
 use App\utils\EntityUtil;
+use App\services\UserService;
 
 
 class AuthController extends Controller
-{
+{   
+    protected $userService;
+
+    public function __construct(UserService $userService){
+        $this->userService = $userService;
+    }
 
     /**
      * API Register
@@ -23,16 +29,20 @@ class AuthController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function register(UserRequest $request)
-    {
+    // public function register(UserRequest $request)
+    // {
+    //     $user = $this->userService->create($request);
+    //     return response()->json($user,201);
+
+
         // $configuration = \App\Configuration::where('code','CLUB_ID')->first();
         // $club = \App\Club::findOrFail($configuration->value);
-        $user = EntityUtil::getUserModel($request);
-        $user->save();
-        $dogs = EntityUtil::getDogModels($request);
-        foreach($dogs as &$dog){
-            $user->dogs()->save($dog);
-        }
+        // $user = EntityUtil::getUserModel($request);
+        // $user->save();
+        // $dogs = EntityUtil::getDogModels($request);
+        // foreach($dogs as &$dog){
+        //     $user->dogs()->save($dog);
+        // }
 
 
         //$user->club()->associate($club);
@@ -45,8 +55,8 @@ class AuthController extends Controller
             
             
         //     ]);
-        $verification_code = str_random(30); //Generate verification code
-        DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
+        // $verification_code = str_random(30); //Generate verification code
+        // DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
         // $subject = "Please verify your email address.";
         // Mail::send('email.verify', ['name' => $name, 'verification_code' => $verification_code],
         //     function($mail) use ($email, $name, $subject){
@@ -54,10 +64,15 @@ class AuthController extends Controller
         //         $mail->to($email, $name);
         //         $mail->subject($subject);
         //     });
-        return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email to complete your registration.']);
-    }
+        // return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email to complete your registration.']);
+    // }
 
-   
+    public function generateVerificationCode($user_id)
+    {
+        $verification_code = str_random(30); 
+        DB::table('user_verifications')->insert(['user_id'=>$user_id,'token'=>$verification_code]);
+    }
+    
 
     /**
      * API Verify User

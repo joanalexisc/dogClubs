@@ -17,15 +17,17 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::post('register', 'AuthController@register');
+//-------------------user-----------------------------
+Route::post('register', 'UserController@create');
+//------------------Authorization---------------------
 Route::post('login', 'AuthController@login');
-//validate mail
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
 Route::get('token', 'AuthController@token');
-
-
 Route::post('recover', 'AuthController@recover');
+Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+Route::post('password/reset', 'Auth\PasswordController@reset');
 
+//------------------Roles & permissions----------------------------------
 
 Route::post('role', 'AuthController@createRole');
 Route::post('permission', 'AuthController@createPermission');
@@ -43,8 +45,7 @@ Route::post('authenticate', 'AuthController@authenticate');
 
 
 
-Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
-Route::post('password/reset', 'Auth\PasswordController@reset');
+
 
 Route::group(['middleware' => ['jwt.auth']], function() {
     Route::post('logout', 'AuthController@logout');
