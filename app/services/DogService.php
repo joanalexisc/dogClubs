@@ -39,4 +39,8 @@ class DogService
         
         return $dog;
     }
+
+    public function delete($id){
+        Dog::destroy($id);
+    }
 }

@@ -62,20 +62,29 @@ class UserService
         $user->birthday = $request->birthday;
         $user->sex = $request->sex;
         $user->address = $request->address;
-
+        
+        $dogsToKepp = array();
         foreach ($request->dogs as $request_dog) {
             if($request_dog["id"] == 0){
                 $dog = $this->dogService->create($request_dog);
                 $user->dogs()->attach($dog);
+                $dogsToKepp[] = $dog->id;
             }else{
                 
                 foreach ($user->dogs as $model_dog){
                     if($model_dog->id == $request_dog["id"]){
                         $this->dogService->update($request_dog);
+                        $dogsToKepp[] = $model_dog->id;
                         break;
                     }
                 }
             }
+        }
+
+        foreach ($user->dogs as $model_dog){
+           if(!in_array($model_dog->id, $dogsToKepp)){
+                $this->dogService->delete($model_dog->id);
+           }
         }
 
         $user->save();
