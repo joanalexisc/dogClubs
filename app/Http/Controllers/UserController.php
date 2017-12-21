@@ -77,7 +77,7 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, $id)
     {
-        $this->userService->update($request);
+        $this->userService->update($request, $id);
     }
 
     /**

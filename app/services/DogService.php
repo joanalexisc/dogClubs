@@ -22,4 +22,21 @@ class DogService
 
         return $dog;
     }
+
+    public function update($request_dog)
+    {
+        $dog = Dog::find($request_dog["id"]);
+        $dog->name = $request_dog["name"];
+        $dog->sex = $request_dog["sex"];
+        $dog->birthday = $request_dog["birthday"];
+        $dog->purity = $request_dog["purity"];
+        $dog->breeder = $request_dog["breeder"];
+        $dog->mother = $request_dog["mother"];
+        $dog->father = $request_dog["father"];
+        $dog->isAlive = $request_dog["isAlive"];
+        
+        $dog->save();
+        
+        return $dog;
+    }
 }

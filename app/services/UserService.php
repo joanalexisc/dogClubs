@@ -50,8 +50,8 @@ class UserService
         return User::with("dogs")->get();
     }
 
-    public function update(UserRequest $request){
-        $user = User::with("dogs")->get();
+    public function update(UserRequest $request,$id){
+        $user = User::with("dogs")->find($id);
         $user->names = $request->names;
         $user->last_names = $request->last_names;
         // $user->email = $request->email;
@@ -62,7 +62,21 @@ class UserService
         $user->birthday = $request->birthday;
         $user->sex = $request->sex;
         $user->address = $request->address;
-        $user->status = $status_id;
+
+        foreach ($request->dogs as $request_dog) {
+            if($request_dog["id"] == 0){
+                $dog = $this->dogService->create($request_dog);
+                $user->dogs()->attach($dog);
+            }else{
+                
+                foreach ($user->dogs as $model_dog){
+                    if($model_dog->id == $request_dog["id"]){
+                        $this->dogService->update($request_dog);
+                        break;
+                    }
+                }
+            }
+        }
 
         $user->save();
     }

@@ -20,7 +20,7 @@ use Illuminate\Http\Request;
 //-------------------user-----------------------------
 Route::post('user', 'UserController@create');
 Route::get('user', 'UserController@index');
-Route::put('user/{id}', 'UserController@update');
+Route::put('user/{id?}', 'UserController@update');
 
 //------------------Authorization---------------------
 Route::post('login', 'AuthController@login');
