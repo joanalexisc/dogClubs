@@ -18,7 +18,10 @@ use Illuminate\Http\Request;
 // });
 
 //-------------------user-----------------------------
-Route::post('register', 'UserController@create');
+Route::post('user', 'UserController@create');
+Route::get('user', 'UserController@index');
+Route::put('user/{id}', 'UserController@update');
+
 //------------------Authorization---------------------
 Route::post('login', 'AuthController@login');
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
@@ -37,7 +40,7 @@ Route::post('attach-permission', 'AuthController@attachPermission');
 //'prefix' => 'api',
 Route::group(['middleware' => ['ability:admin,create-users']], function()
 {
-    Route::get('users', 'AuthController@dummy');
+    // Route::get('users', 'AuthController@dummy');
 });
 
 // Authentication route

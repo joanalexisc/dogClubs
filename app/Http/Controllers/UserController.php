@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json($this->userService->getUsers());
     }
 
     /**
@@ -75,9 +75,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserRequest $request, $id)
     {
-        //
+        $this->userService->update($request);
     }
 
     /**

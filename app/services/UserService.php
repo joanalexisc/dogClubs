@@ -46,4 +46,25 @@ class UserService
         return $user;
     }
 
+    public function getUsers(){
+        return User::with("dogs")->get();
+    }
+
+    public function update(UserRequest $request){
+        $user = User::with("dogs")->get();
+        $user->names = $request->names;
+        $user->last_names = $request->last_names;
+        // $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->personal_id = $request->personal_id;
+        $user->mobile = $request->mobile;
+        $user->home = $request->home;
+        $user->birthday = $request->birthday;
+        $user->sex = $request->sex;
+        $user->address = $request->address;
+        $user->status = $status_id;
+
+        $user->save();
+    }
+
 }
