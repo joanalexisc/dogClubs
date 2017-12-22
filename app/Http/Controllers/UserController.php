@@ -54,7 +54,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json($this->userService->findWithDogs($id));
     }
 
     /**

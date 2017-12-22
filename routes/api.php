@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 //-------------------user-----------------------------
 Route::post('user', 'UserController@create');
 Route::get('user', 'UserController@index');
+Route::get('user/{id?}', 'UserController@show');
 Route::put('user/{id?}', 'UserController@update');
 
 //------------------Authorization---------------------
@@ -27,8 +28,8 @@ Route::post('login', 'AuthController@login');
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
 Route::get('token', 'AuthController@token');
 Route::post('recover', 'AuthController@recover');
-Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
-Route::post('password/reset', 'Auth\PasswordController@reset');
+Route::get('password/reset/{token?}', 'AuthController@showResetForm');
+Route::post('password/reset', 'AuthController@reset');
 
 //------------------Roles & permissions----------------------------------
 

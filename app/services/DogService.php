@@ -35,12 +35,28 @@ class DogService
         $dog->father = $request_dog["father"];
         $dog->isAlive = $request_dog["isAlive"];
         
+        
+
         $dog->save();
         
         return $dog;
     }
 
     public function delete($id){
+        $dog = Dog::with("users")->find($id);
+        foreach($dog->users as $user){
+            $dog->users()->detach($user->id); 
+        }
         Dog::destroy($id);
+    }
+
+    public function removeUser($id, $user){
+        // $count = $post->comments()->count()
+        $dog = Dog::find($id);
+        $count = $dog->users()->count();
+        $dog->users()->detach($user);
+        if($count == 1){
+            Dog::destroy($id);
+        }
     }
 }

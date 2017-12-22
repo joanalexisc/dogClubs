@@ -83,11 +83,15 @@ class UserService
 
         foreach ($user->dogs as $model_dog){
            if(!in_array($model_dog->id, $dogsToKepp)){
-                $this->dogService->delete($model_dog->id);
+                $this->dogService->removeUser($model_dog->id, $user->id);
            }
         }
 
         $user->save();
+    }
+
+    public function findWithDogs($id){
+        return User::with("dogs")->find($id);
     }
 
 }
