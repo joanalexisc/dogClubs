@@ -23,7 +23,8 @@ class CreateUserStatusesTable extends Migration
         DB::table('user_statuses')->insert([
             ['code' => 'REG', 'description' => 'Registrado, pendiente envio de pago'],
             ['code' => 'PAP', 'description' => 'Comprobante de pago enviado'],
-            ['code' => 'APR', 'description' => 'Aprovado'],
+            ['code' => 'APPR', 'description' => 'Aprovado'],
+            ['code' => 'DIS', 'description' => 'Desactivar'],
             ['code' => 'EXP', 'description' => 'Expulsado ']
         ]);
     }

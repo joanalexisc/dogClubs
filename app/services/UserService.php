@@ -47,7 +47,7 @@ class UserService
     }
 
     public function getUsers(){
-        return User::with("dogs")->get();
+        return User::all();//with("dogs")->get();
     }
 
     public function update(UserRequest $request,$id){
@@ -94,4 +94,22 @@ class UserService
         return User::with("dogs")->find($id);
     }
 
+    public function approveUser($id){
+        $this->updateUserStatus("APPR",$id);
+    }
+
+    public function expelUser($id){
+        $this->updateUserStatus("EXP",$id);
+    }
+
+    public function disableUser($id){
+        $this->updateUserStatus("DIS",$id);
+    }
+    private function updateUserStatus($status,$id){
+        $user = User::find($id);
+        $status_id = UserStatus::where('CODE', $status)->first()->id;
+        $user->status = $status_id;
+        $user->save();
+    }
+    
 }
