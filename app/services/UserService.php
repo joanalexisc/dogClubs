@@ -4,6 +4,7 @@ namespace App\services;
 
 use App\Http\Requests\UserRequest;
 use App\services\DogService;
+use App\services\AuthorizationService;
 use App\User;
 use App\UserStatus;
 use Hash;
@@ -11,11 +12,19 @@ use Hash;
 class UserService
 {
     protected $dogService;
+    protected $authService;
 
-    public function __construct(DogService $dogService)
+    public function __construct(DogService $dogService, AuthorizationService $authService)
     {
         $this->dogService = $dogService;
+        $this->authService = $authService;
     }
+
+    public function me(){
+        $user = JWTAuth::parseToken()->authenticate();
+        return response()->json($user);
+    }
+
 
     public function create(UserRequest $request)
     {
@@ -42,12 +51,15 @@ class UserService
         }
 
         $user->dogs = $dogs;
-
+        $this->authService->generateVerificationCode($user->id);
         return $user;
     }
 
     public function getUsers(){
-        return User::all();//with("dogs")->get();
+        $user_status = UserStatus::where('CODE','APR')->first()->id;
+        
+        return User::where("status",$user_status)->get();//with("dogs")->get();
+
     }
 
     public function update(UserRequest $request,$id){

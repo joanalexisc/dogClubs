@@ -19,33 +19,36 @@ use Illuminate\Http\Request;
 
 //-------------------user-----------------------------
 Route::post('user', 'UserController@create');
-Route::get('user', 'UserController@index');
-Route::get('user/{id?}', 'UserController@show');
-Route::put('user/{id?}', 'UserController@update');
 
+Route::group(['middleware' => ['jwt.auth']], function() {
+    Route::get('user', 'UserController@index');
+    Route::get('user/{id?}', 'UserController@show');
+    Route::put('user/{id?}', 'UserController@update');
+});
 //------------------Authorization---------------------
 Route::post('login', 'AuthController@login');
 Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
 Route::get('token', 'AuthController@token');
 Route::post('recover', 'AuthController@recover');
-Route::get('password/reset/{token?}', 'AuthController@showResetForm');
-Route::post('password/reset', 'AuthController@reset');
-
+// Route::get('password/reset', 'AuthController@showResetForm');
+Route::post('password/reset', 'Auth\PasswordController@reset')->name('password.reset');
+Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+Route::post('authenticate', 'AuthController@authenticate');
 //------------------Roles & permissions----------------------------------
-
+Route::group(['middleware' => ['ability:admin,create-users']], function()
+{
 Route::post('role', 'AuthController@createRole');
 Route::post('permission', 'AuthController@createPermission');
 Route::post('assign-role', 'AuthController@assignRole');
 Route::post('attach-permission', 'AuthController@attachPermission');
 
 //'prefix' => 'api',
-Route::group(['middleware' => ['ability:admin,create-users']], function()
-{
+
     // Route::get('users', 'AuthController@dummy');
 });
 
 // Authentication route
-Route::post('authenticate', 'AuthController@authenticate');
+
 
 
 

@@ -14,3 +14,6 @@
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+
+// Route::post('password/reset', 'Auth\PasswordController@reset');
