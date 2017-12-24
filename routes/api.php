@@ -17,6 +17,12 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
+//NECESITA ESTO aun no se ssabe para que porque igual manda el correo, el controlador PasswordController no existe puedo
+//poner pepito y seguira funcionando...
+// Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.reset');
+// Route::post('JOAN', 'Auth\ResetPasswordController@reset')->name('password.reset');
+
+
 //-------------------user-----------------------------
 Route::post('user', 'UserController@create');
 
@@ -31,8 +37,10 @@ Route::get('user/verify/{verification_code}', 'AuthController@verifyUser');
 Route::get('token', 'AuthController@token');
 Route::post('recover', 'AuthController@recover');
 // Route::get('password/reset', 'AuthController@showResetForm');
-Route::post('password/reset', 'Auth\PasswordController@reset')->name('password.reset');
-Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+
+
+Route::get('password/reset/{token?}', 'Auth\ResetPasswordController@showResetForm');
+
 Route::post('authenticate', 'AuthController@authenticate');
 //------------------Roles & permissions----------------------------------
 Route::group(['middleware' => ['ability:admin,create-users']], function()
