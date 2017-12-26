@@ -16,5 +16,9 @@
 // });
 
 
-// Route::post('password/reset', 'Auth\PasswordController@reset');
+
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
+

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\services\UserService;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
@@ -21,7 +22,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json($this->userService->getUsers());
+        $filters = Input::all();
+        return response()->json($this->userService->getUsers($filters));
     }
 
     /**
@@ -88,6 +90,6 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // $this->userService
     }
 }

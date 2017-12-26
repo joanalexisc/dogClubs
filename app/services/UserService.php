@@ -5,6 +5,8 @@ namespace App\services;
 use App\Http\Requests\UserRequest;
 use App\services\DogService;
 use App\services\AuthorizationService;
+use App\Repositories\UserRepository;
+
 use App\User;
 use App\UserStatus;
 use Hash;
@@ -13,11 +15,13 @@ class UserService
 {
     protected $dogService;
     protected $authService;
+    protected $userRepository;
 
-    public function __construct(DogService $dogService, AuthorizationService $authService)
+    public function __construct(DogService $dogService, AuthorizationService $authService, UserRepository $userRepository)
     {
         $this->dogService = $dogService;
         $this->authService = $authService;
+       $this->userRepository = $userRepository;
     }
 
     public function me(){
@@ -55,11 +59,11 @@ class UserService
         return $user;
     }
 
-    public function getUsers(){
-        $user_status = UserStatus::where('CODE','APR')->first()->id;
+    public function getUsers($filters){
+        // $user_status = UserStatus::where('CODE','APPR')->first()->id;
         
-        return User::where("status",$user_status)->get();//with("dogs")->get();
-
+        // return User::where("status",$user_status)->get();//with("dogs")->get();
+        return $this->userRepository->applyFilters($filters)->all();
     }
 
     public function update(UserRequest $request,$id){

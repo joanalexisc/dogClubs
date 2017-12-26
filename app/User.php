@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Zizaco\Entrust\Traits\EntrustUserTrait;
+use App\Notifications\PasswordReset;
 
 class User extends Authenticatable
 {
@@ -31,5 +32,10 @@ class User extends Authenticatable
 
     public function dogs(){
         return $this->belongsToMany('App\Dog');
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new PasswordReset($token));
     }
 }

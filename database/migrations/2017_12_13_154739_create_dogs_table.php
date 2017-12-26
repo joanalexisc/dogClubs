@@ -19,6 +19,7 @@ class CreateDogsTable extends Migration
             $table->char('sex', 1);
             $table->date('birthday');
             $table->unsignedInteger('purity');
+            $table->string('chip_number')->nullable();
             $table->string('breeder', 150)->nullable();
             $table->string('mother', 150)->nullable();
             $table->string('father', 150)->nullable();

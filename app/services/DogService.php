@@ -3,6 +3,7 @@
 namespace App\services;
 
 use App\Dog;
+use App\utils\CommonUtil;
 
 class DogService
 {
@@ -14,9 +15,10 @@ class DogService
             "sex" => $request_dog["sex"],
             "birthday" => $request_dog["birthday"],
             "purity" => $request_dog["purity"],
-            "breeder" => $request_dog["breeder"],
-            "mother" => $request_dog["mother"],
-            "father" => $request_dog["father"],
+            "chip_number" => CommonUtil::getValue("chip_number", $request_dog),
+            "breeder" => CommonUtil::getValue("breeder", $request_dog),
+            "mother" => CommonUtil::getValue("mother", $request_dog),
+            "father" => CommonUtil::getValue("father", $request_dog),
             "isAlive" => $request_dog["isAlive"],
         ]);
 
@@ -30,9 +32,10 @@ class DogService
         $dog->sex = $request_dog["sex"];
         $dog->birthday = $request_dog["birthday"];
         $dog->purity = $request_dog["purity"];
-        $dog->breeder = $request_dog["breeder"];
-        $dog->mother = $request_dog["mother"];
-        $dog->father = $request_dog["father"];
+        $dog->chip_number = CommonUtil::getValue("chip_number", $request_dog);
+        $dog->breeder = CommonUtil::getValue("breeder", $request_dog);
+        $dog->mother = CommonUtil::getValue("mother", $request_dog);
+        $dog->father = CommonUtil::getValue("father", $request_dog);
         $dog->isAlive = $request_dog["isAlive"];
         
         

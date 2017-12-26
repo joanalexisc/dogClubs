@@ -11,6 +11,7 @@ class Dog extends Model
         "sex",
         "birthday",
         "purity",
+        "chip_number",
         "breeder",
         "mother",
         "father",

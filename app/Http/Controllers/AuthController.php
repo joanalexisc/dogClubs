@@ -63,4 +63,5 @@ class AuthController extends Controller
     public function attachPermission(Request $request){
         return $this->$roleService->attachPermission($request);
     }
+
 }
