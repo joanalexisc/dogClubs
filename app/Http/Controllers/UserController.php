@@ -37,16 +37,6 @@ class UserController extends Controller
         return response()->json($user,201);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -57,17 +47,6 @@ class UserController extends Controller
     public function show($id)
     {
         return response()->json($this->userService->findWithDogs($id));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
     }
 
     /**
@@ -90,6 +69,14 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        // $this->userService
+         $this->userService->disableUser($i);
+    }
+
+    public function approve($id){
+        $this->userService->approveUser($id);
+    }
+
+    public function expel($id){
+        $this->userService->expelUser($id);
     }
 }
