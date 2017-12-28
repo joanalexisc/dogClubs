@@ -23,6 +23,11 @@ use Illuminate\Http\Request;
 //-------------------user-----------------------------
 Route::post('user', 'UserController@create');
 
+Route::get('test', function(){
+	return "Hola";
+});
+Route::get('test2', 'UserController@index');
+
 Route::group(['middleware' => ['jwt.auth']], function() {
 	Route::get('user', 'UserController@index');    
     Route::get('user/{id?}', 'UserController@show');

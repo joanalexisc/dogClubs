@@ -13,14 +13,11 @@ use Hash;
 
 class UserService
 {
-    protected $dogService;
-    protected $authService;
-    protected $userRepository;
+    protected $dogService, $userRepository;
 
-    public function __construct(DogService $dogService, AuthorizationService $authService, UserRepository $userRepository)
+    public function __construct(DogService $dogService, UserRepository $userRepository)
     {
         $this->dogService = $dogService;
-        $this->authService = $authService;
        $this->userRepository = $userRepository;
     }
 
@@ -55,7 +52,7 @@ class UserService
         }
 
         $user->dogs = $dogs;
-        $this->authService->generateVerificationCode($user->id);
+
         return $user;
     }
 
@@ -104,6 +101,10 @@ class UserService
         }
 
         $user->save();
+    }
+
+    public function find($id){
+        return User::find($id);
     }
 
     public function findWithDogs($id){

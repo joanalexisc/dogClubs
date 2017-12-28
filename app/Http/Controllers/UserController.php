@@ -4,16 +4,18 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\services\UserService;
+use App\services\AuthorizationService;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Input;
 
 class UserController extends Controller
 {
-    protected $userService;
+    protected $userService, $authService;
 
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, AuthorizationService $authService)
     {
         $this->userService = $userService;
+        $this->authService = $authService;
     }
     /**
      * Display a listing of the resource.
@@ -34,6 +36,7 @@ class UserController extends Controller
     public function create(UserRequest $request)
     {
         $user = $this->userService->create($request);
+        $this->authService->generateVerificationCode($user->id);
         return response()->json($user,201);
     }
 

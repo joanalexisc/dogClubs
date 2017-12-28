@@ -9,7 +9,7 @@ use Validator;
 use DB, Hash, Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
-
+use App\services\OperationReponse;
 use App\Http\Requests\UserRequest;
 use App\utils\EntityUtil;
 use App\services\RoleService;
@@ -23,11 +23,24 @@ class AuthController extends Controller
     public function __construct(RoleService $roleService, AuthorizationService $authService){
         $this->roleService = $roleService;
         $this->authService = $authService;
-    }
+    }   
 
     public function verifyUser($verification_code)
     {
-        return $this->authService->verifyUser($verification_code);
+        $result = $this->authService->verifyUser($verification_code);
+        $response = null;
+        switch ($result) {
+            case OperationReponse::NOT_FOUND:
+                $response = ['success'=> false, 'error'=> "Verification code is invalid."];
+                break;
+            case OperationReponse::VALIDATED:
+                $response = ['success'=> true, 'message'=> 'Account already verified..'];
+                break;
+            case OperationReponse::SUCCESS:
+                $response = ['success'=> true, 'message'=> 'You have successfully verified your email address.'];
+                break;
+        }
+        return response()->json($response);
     }
 
     public function login(Request $request)

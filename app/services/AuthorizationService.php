@@ -15,35 +15,41 @@ use Illuminate\Mail\Message;
 use App\Http\Requests\UserRequest;
 use App\utils\EntityUtil;
 use App\services\UserService;
+use App\services\OperationReponse;
+use App\Repositories\AuthRepository;
 
 
 class AuthorizationService
 { 
+    protected $userService;
+    protected $authRepository;
+
+    public function __construct(AuthRepository $authRepository, UserService $userService){
+        $this->authRepository = $authRepository;
+        $this->userService = $userService;
+    }
+
     public function generateVerificationCode($user_id)
     {
         $verification_code = str_random(30); 
         DB::table('user_verifications')->insert(['user_id'=>$user_id,'token'=>$verification_code]);
+        return $verification_code;
     }
 
     public function verifyUser($verification_code)
     {
-        $check = DB::table('user_verifications')->where('token',$verification_code)->first();
+        $result = OperationReponse::NOT_FOUND;
+        $check = $this->authRepository->findVerification($verification_code);
         if(!is_null($check)){
-            $user = User::find($check->user_id);
+            $user = $this->userService->find($check->user_id);
             if($user->is_verified == 1){
-                return response()->json([
-                    'success'=> true,
-                    'message'=> 'Account already verified..'
-                ]);
+                $result = OperationReponse::VALIDATED;
+            }else{
+                $this->authRepository->verifyUser($user);
+                $result = OperationReponse::SUCCESS;
             }
-            $user->update(['is_verified' => 1]);
-            DB::table('user_verifications')->where('token',$verification_code)->delete();
-            return response()->json([
-                'success'=> true,
-                'message'=> 'You have successfully verified your email address.'
-            ]);
         }
-        return response()->json(['success'=> false, 'error'=> "Verification code is invalid."]);
+        return $result;
     }
 
     public function login(Request $request)
