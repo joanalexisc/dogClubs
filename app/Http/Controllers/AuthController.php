@@ -45,7 +45,25 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        return $this->authService->login($request);
+        $rules = [
+            'email' => 'required|email',
+            'password' => 'required',
+        ];
+        $input = $request->only('email', 'password');
+
+        $toke = $this->authService->login($input); 
+        
+        $response = null;
+
+        if($toke === OperationReponse::ERROR){
+            $response = response()->json(['success' => false, 'error' => 'could_not_create_token'], 500);
+        }else if($toke === OperationReponse::INVALID_CREDENTIALS){
+            $response = response()->json(['success' => false, 'error' => 'Invalid Credentials. Please make sure you entered the right information and you have verified your email address.'], 401);
+        }else{
+            $response = response()->json(['success' => true, 'data'=> [ 'token' => "Bearer " . $token ]]);
+        }
+
+        return $response;
     }
 
     public function token(){

@@ -52,38 +52,21 @@ class AuthorizationService
         return $result;
     }
 
-    public function login(Request $request)
+    public function login($credentials)
     {
-        $rules = [
-            'email' => 'required|email',
-            'password' => 'required',
-        ];
-        $input = $request->only('email', 'password');
-        $validator = Validator::make($input, $rules);
 
-        $user_status = \App\UserStatus::where('CODE','APPR')->first()->id; 
+         $user_status = \App\UserStatus::where('CODE','APPR')->first()->id; 
+         $credentials['is_verified'] = 1;
+         $credentials['status'] = $user_status;
 
-        if($validator->fails()) {
-            $error = $validator->messages()->toJson();
-            return response()->json(['success'=> false, 'error'=> $error]);
-        }
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-            'is_verified' => 1,
-            'status' => $user_status
-        ];
         try {
-            // attempt to verify the credentials and create a token for the user
             if (! $token = JWTAuth::attempt($credentials)) {
-                return response()->json(['success' => false, 'error' => 'Invalid Credentials. Please make sure you entered the right information and you have verified your email address.'], 401);
+                return OperationReponse::INVALID_CREDENTIALS;
             }
         } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
-            return response()->json(['success' => false, 'error' => 'could_not_create_token'], 500);
+            return OperationReponse::ERROR; 
         }
-        // all good so return the token
-        return response()->json(['success' => true, 'data'=> [ 'token' => "Bearer " . $token ]]);
+        return $token;
     }
 
     public function token(){
